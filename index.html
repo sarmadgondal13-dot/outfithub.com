@@ -1,0 +1,1529 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OutfitHub.pk | Warmth & Style For The Whole Family</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Montserrat & Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                        display: ['Montserrat', 'sans-serif'],
+                    },
+                    colors: {
+                        brandDark: '#18181b',
+                        brandCharcoal: '#27272a',
+                        brandAccent: '#d97706',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Scrollbar & Smooth Transitions */
+        body {
+            font-family: 'Poppins', sans-serif;
+            overflow-x: hidden;
+        }
+        h1, h2, h3, .font-heading {
+            font-family: 'Montserrat', sans-serif;
+        }
+        /* Hero Dark Left Gradient Overlay matching reference image */
+        .hero-gradient {
+            background: linear-gradient(
+                90deg,
+                rgba(18, 18, 20, 0.92) 0%,
+                rgba(24, 24, 27, 0.78) 45%,
+                rgba(24, 24, 27, 0.25) 75%,
+                rgba(24, 24, 27, 0.1) 100%
+            );
+        }
+        @media (max-width: 768px) {
+            .hero-gradient {
+                background: linear-gradient(
+                    180deg,
+                    rgba(18, 18, 20, 0.85) 0%,
+                    rgba(18, 18, 20, 0.75) 60%,
+                    rgba(18, 18, 20, 0.92) 100%
+                );
+            }
+        }
+        /* Custom Toast Notification Animation */
+        @keyframes slideUp {
+            from { transform: translateY(100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .toast-enter {
+            animation: slideUp 0.3s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="bg-zinc-50 text-zinc-900 antialiased selection:bg-zinc-900 selection:text-white">
+
+    <!-- =====================================================================
+         TOP NAVIGATION BAR (Transparent over Hero, Solid on Scroll)
+    ====================================================================== -->
+    <header id="navbar" class="fixed top-0 left-0 right-0 z-40 transition-all duration-300 py-5 px-6 md:px-12 lg:px-20">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <!-- Brand Logo -->
+            <a href="#" class="text-white font-heading font-bold text-2xl md:text-3xl tracking-tight flex items-center gap-1">
+                <span id="nav-brand-name">OutfitHub</span><span class="text-amber-400 font-extrabold">.pk</span>
+            </a>
+
+            <!-- Desktop Navigation Links -->
+            <nav class="hidden md:flex items-center space-x-8 text-sm font-medium text-white/90">
+                <a href="#" class="hover:text-white transition">Home</a>
+                <a href="#categories" onclick="selectCategoryFromNav('men')" class="hover:text-white transition">Men</a>
+                <a href="#categories" onclick="selectCategoryFromNav('women')" class="hover:text-white transition">Women</a>
+                <a href="#categories" onclick="selectCategoryFromNav('kids')" class="hover:text-white transition">Kids</a>
+                <a href="#shop" onclick="filterProducts('all')" class="hover:text-amber-400 transition">Winter Collection</a>
+            </nav>
+
+            <!-- Right Actions: Admin Button, Cart Button & Mobile Menu -->
+            <div class="flex items-center gap-3">
+                <button onclick="openAdminModal()" title="Store Owner Admin Panel" class="bg-white/10 hover:bg-amber-500 hover:text-zinc-950 backdrop-blur-md text-white px-3.5 py-2.5 rounded-full transition duration-200 border border-white/20 text-xs font-semibold flex items-center gap-1.5">
+                    <i class="fa-solid fa-lock"></i>
+                    <span class="hidden sm:inline">Admin</span>
+                </button>
+
+                <button onclick="toggleCart()" aria-label="Open Shopping Cart" class="relative bg-white/15 hover:bg-white/25 backdrop-blur-md text-white p-3 rounded-full transition duration-200 border border-white/20">
+                    <i class="fa-solid fa-bag-shopping text-lg"></i>
+                    <span id="cart-badge" class="absolute -top-1.5 -right-1.5 bg-amber-500 text-zinc-950 text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center shadow-md">0</span>
+                </button>
+
+                <!-- Mobile Hamburger Button -->
+                <button onclick="toggleMobileMenu()" class="md:hidden text-white p-2 focus:outline-none">
+                    <i class="fa-solid fa-bars text-2xl"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Dropdown Menu -->
+        <div id="mobile-menu" class="hidden md:hidden mt-4 bg-zinc-900/95 backdrop-blur-lg rounded-2xl p-5 border border-white/10 text-white space-y-3 shadow-2xl">
+            <a href="#shop" onclick="selectCategoryFromNav('men'); toggleMobileMenu()" class="block py-2 px-3 rounded-xl hover:bg-white/10 font-medium">Men's Wear</a>
+            <a href="#shop" onclick="selectCategoryFromNav('women'); toggleMobileMenu()" class="block py-2 px-3 rounded-xl hover:bg-white/10 font-medium">Women's Wear</a>
+            <a href="#shop" onclick="selectCategoryFromNav('kids'); toggleMobileMenu()" class="block py-2 px-3 rounded-xl hover:bg-white/10 font-medium">Kids' Wear</a>
+            <a href="#shop" onclick="filterProducts('all'); toggleMobileMenu()" class="block py-2 px-3 rounded-xl bg-white text-zinc-900 font-semibold text-center">Full Winter Collection</a>
+            <button onclick="openAdminModal(); toggleMobileMenu()" class="w-full py-2.5 px-3 rounded-xl bg-amber-500 text-zinc-950 font-bold text-center flex items-center justify-center gap-2">
+                <i class="fa-solid fa-lock"></i> Store Admin Panel
+            </button>
+        </div>
+    </header>
+
+    <!-- =====================================================================
+         HERO LANDING SECTION (Matching Reference Design)
+    ====================================================================== -->
+    <section class="relative min-h-screen flex items-center pt-24 pb-16 px-6 md:px-12 lg:px-20 overflow-hidden bg-zinc-900">
+        <!-- Full-Bleed Background Image -->
+        <img 
+            id="hero-bg-img"
+            src="https://images.unsplash.com/photo-1511895426328-dc8714191300?auto=format&fit=crop&w=2000&q=85" 
+            onerror="this.src='https://placehold.co/1920x1080/18181b/ffffff?text=OutfitHub.pk+Winter+Collection'"
+            alt="OutfitHub.pk Winter Family Collection" 
+            class="absolute inset-0 w-full h-full object-cover object-center scale-105 transition-transform duration-1000"
+        >
+        <!-- Left-Side Dark Gradient Overlay -->
+        <div class="absolute inset-0 hero-gradient"></div>
+
+        <!-- Hero Content Container -->
+        <div class="relative z-10 max-w-7xl mx-auto w-full">
+            <div class="max-w-2xl space-y-6">
+                <!-- Seasonal Tag -->
+                <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/15 text-amber-300 text-xs font-semibold tracking-wider uppercase">
+                    <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+                    New Season Arrival • Pakistan
+                </div>
+
+                <!-- Main Bold Uppercase Headline -->
+                <h1 id="hero-headline" class="font-heading font-extrabold text-4xl sm:text-5xl lg:text-6xl text-white leading-[1.12] tracking-tight uppercase">
+                    Warmth &amp; Style For The Whole Family
+                </h1>
+
+                <!-- Subheadline -->
+                <p id="hero-subtitle" class="text-zinc-200 text-base sm:text-lg md:text-xl font-normal leading-relaxed max-w-xl">
+                    Explore the New Winter Collection. Cozy fleece, jackets, &amp; seasonal wear crafted for everyone.
+                </p>
+
+                <!-- Primary CTA Buttons Side-by-Side -->
+                <div class="flex flex-wrap items-center gap-4 pt-2">
+                    <a href="#shop" onclick="filterProducts('all')" class="px-7 py-3.5 rounded-full bg-white text-zinc-950 font-heading font-bold text-xs sm:text-sm tracking-wider uppercase shadow-lg hover:bg-zinc-200 hover:scale-[1.02] transition duration-200">
+                        Shop Winter Collection
+                    </a>
+                    <a href="#categories" class="px-7 py-3.5 rounded-full bg-transparent text-white border-2 border-white/80 font-heading font-bold text-xs sm:text-sm tracking-wider uppercase hover:bg-white/15 hover:border-white transition duration-200">
+                        Explore Now
+                    </a>
+                </div>
+
+                <!-- Three Interactive Pill-Shaped Category Filter Buttons with Dividers -->
+                <div class="pt-4">
+                    <p class="text-xs text-zinc-400 uppercase tracking-widest mb-3 font-medium">Quick Category Filter</p>
+                    <div class="inline-flex items-center flex-wrap gap-2 sm:gap-3">
+                        <button onclick="heroCategoryClick('men')" class="px-5 py-2 rounded-full bg-white/15 hover:bg-white hover:text-zinc-950 backdrop-blur-md border border-white/25 text-white text-xs font-bold tracking-widest uppercase transition duration-200">
+                            MEN
+                        </button>
+                        <span class="text-white/30 font-light select-none">|</span>
+                        <button onclick="heroCategoryClick('women')" class="px-5 py-2 rounded-full bg-white/15 hover:bg-white hover:text-zinc-950 backdrop-blur-md border border-white/25 text-white text-xs font-bold tracking-widest uppercase transition duration-200">
+                            WOMEN
+                        </button>
+                        <span class="text-white/30 font-light select-none">|</span>
+                        <button onclick="heroCategoryClick('kids')" class="px-5 py-2 rounded-full bg-white/15 hover:bg-white hover:text-zinc-950 backdrop-blur-md border border-white/25 text-white text-xs font-bold tracking-widest uppercase transition duration-200">
+                            KIDS
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- =====================================================================
+         TRUST & FEATURES BAR
+    ====================================================================== -->
+    <section class="bg-white border-b border-zinc-200 py-6 px-6 md:px-12">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-6 text-center sm:text-left">
+            <div class="flex items-center justify-center sm:justify-start gap-4">
+                <div class="w-12 h-12 rounded-2xl bg-zinc-100 flex items-center justify-center text-zinc-900 text-xl shrink-0">
+                    <i class="fa-solid fa-truck-fast"></i>
+                </div>
+                <div>
+                    <h3 class="font-bold text-sm text-zinc-900">Nationwide Delivery</h3>
+                    <p class="text-xs text-zinc-500">Fast shipping across all cities in Pakistan</p>
+                </div>
+            </div>
+            <div class="flex items-center justify-center sm:justify-start gap-4">
+                <div class="w-12 h-12 rounded-2xl bg-zinc-100 flex items-center justify-center text-zinc-900 text-xl shrink-0">
+                    <i class="fa-solid fa-money-bill-wave"></i>
+                </div>
+                <div>
+                    <h3 class="font-bold text-sm text-zinc-900">Cash on Delivery</h3>
+                    <p class="text-xs text-zinc-500">Pay at your doorstep upon receiving order</p>
+                </div>
+            </div>
+            <div class="flex items-center justify-center sm:justify-start gap-4">
+                <div class="w-12 h-12 rounded-2xl bg-zinc-100 flex items-center justify-center text-zinc-900 text-xl shrink-0">
+                    <i class="fa-solid fa-rotate-left"></i>
+                </div>
+                <div>
+                    <h3 class="font-bold text-sm text-zinc-900">7-Day Easy Exchange</h3>
+                    <p class="text-xs text-zinc-500">Hassle-free size &amp; article replacement</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- =====================================================================
+         THREE MAIN CATEGORIES SECTION (MEN, WOMEN, KIDS)
+    ====================================================================== -->
+    <section id="categories" class="py-16 md:py-24 px-6 md:px-12 lg:px-20 max-w-7xl mx-auto">
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
+            <div>
+                <span class="text-amber-600 font-bold text-xs uppercase tracking-widest">Curated Collections</span>
+                <h2 class="font-heading font-extrabold text-3xl md:text-4xl text-zinc-900 mt-1">Shop By Category</h2>
+            </div>
+            <p class="text-zinc-500 text-sm max-w-md">
+                Select a category below to explore tailored winter essentials crafted for comfort, durability, and timeless style.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Category 1: MEN -->
+            <div onclick="heroCategoryClick('men')" class="group relative h-[420px] rounded-3xl overflow-hidden cursor-pointer shadow-md hover:shadow-2xl transition-all duration-500">
+                <img 
+                    src="https://images.unsplash.com/photo-1617137968427-85924c800a22?auto=format&fit=crop&w=900&q=80" 
+                    onerror="this.src='https://placehold.co/600x800/27272a/ffffff?text=MEN+COLLECTION'"
+                    alt="Men's Winter Wear" 
+                    class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                >
+                <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent"></div>
+                <div class="absolute bottom-0 left-0 right-0 p-7 text-white flex items-end justify-between">
+                    <div>
+                        <span class="text-xs uppercase tracking-widest text-amber-400 font-semibold">Coats &amp; Hoodies</span>
+                        <h3 class="font-heading font-extrabold text-2xl mt-1">MEN</h3>
+                        <p class="text-xs text-zinc-300 mt-1">Wool coats, fleece hoodies &amp; jackets</p>
+                    </div>
+                    <span class="w-11 h-11 rounded-full bg-white text-zinc-950 flex items-center justify-center group-hover:bg-amber-400 transition">
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </span>
+                </div>
+            </div>
+
+            <!-- Category 2: WOMEN -->
+            <div onclick="heroCategoryClick('women')" class="group relative h-[420px] rounded-3xl overflow-hidden cursor-pointer shadow-md hover:shadow-2xl transition-all duration-500">
+                <img 
+                    src="https://images.unsplash.com/photo-1581044777550-4cfa60707c03?auto=format&fit=crop&w=900&q=80" 
+                    onerror="this.src='https://placehold.co/600x800/27272a/ffffff?text=WOMEN+COLLECTION'"
+                    alt="Women's Winter Wear" 
+                    class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                >
+                <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent"></div>
+                <div class="absolute bottom-0 left-0 right-0 p-7 text-white flex items-end justify-between">
+                    <div>
+                        <span class="text-xs uppercase tracking-widest text-amber-400 font-semibold">Shawls &amp; Sweaters</span>
+                        <h3 class="font-heading font-extrabold text-2xl mt-1">WOMEN</h3>
+                        <p class="text-xs text-zinc-300 mt-1">Pashmina shawls, trench coats &amp; knits</p>
+                    </div>
+                    <span class="w-11 h-11 rounded-full bg-white text-zinc-950 flex items-center justify-center group-hover:bg-amber-400 transition">
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </span>
+                </div>
+            </div>
+
+            <!-- Category 3: KIDS -->
+            <div onclick="heroCategoryClick('kids')" class="group relative h-[420px] rounded-3xl overflow-hidden cursor-pointer shadow-md hover:shadow-2xl transition-all duration-500">
+                <img 
+                    src="https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?auto=format&fit=crop&w=900&q=80" 
+                    onerror="this.src='https://placehold.co/600x800/27272a/ffffff?text=KIDS+COLLECTION'"
+                    alt="Kids' Winter Wear" 
+                    class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                >
+                <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent"></div>
+                <div class="absolute bottom-0 left-0 right-0 p-7 text-white flex items-end justify-between">
+                    <div>
+                        <span class="text-xs uppercase tracking-widest text-amber-400 font-semibold">Cozy &amp; Warm</span>
+                        <h3 class="font-heading font-extrabold text-2xl mt-1">KIDS</h3>
+                        <p class="text-xs text-zinc-300 mt-1">Puffer jackets, fleece sets &amp; beanies</p>
+                    </div>
+                    <span class="w-11 h-11 rounded-full bg-white text-zinc-950 flex items-center justify-center group-hover:bg-amber-400 transition">
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- =====================================================================
+         WINTER COLLECTION PRODUCT SHOWCASE SECTION
+    ====================================================================== -->
+    <section id="shop" class="py-16 md:py-24 px-6 md:px-12 lg:px-20 bg-zinc-100/80 border-t border-zinc-200">
+        <div class="max-w-7xl mx-auto">
+            <!-- Section Header, Search & Interactive Filter Tabs -->
+            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-12">
+                <div>
+                    <span class="text-amber-600 font-bold text-xs uppercase tracking-widest">OutfitHub.pk Exclusives</span>
+                    <h2 class="font-heading font-extrabold text-3xl md:text-4xl text-zinc-900 mt-1">Winter Collection</h2>
+                </div>
+
+                <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+                    <!-- Search Bar -->
+                    <div class="relative">
+                        <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 text-xs"></i>
+                        <input 
+                            type="text" 
+                            id="product-search" 
+                            oninput="handleSearch(this.value)" 
+                            placeholder="Search jackets, shawls..." 
+                            class="w-full sm:w-60 pl-10 pr-4 py-2.5 rounded-full bg-white border border-zinc-200 text-xs font-medium focus:outline-none focus:border-zinc-900 shadow-xs"
+                        >
+                    </div>
+
+                    <!-- Filter Pill Buttons -->
+                    <div id="filter-tabs" class="inline-flex flex-wrap items-center gap-1.5 bg-white p-1.5 rounded-full shadow-sm border border-zinc-200 self-start sm:self-auto">
+                        <button onclick="filterProducts('all')" data-filter="all" id="tab-all" class="filter-btn active px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition bg-zinc-900 text-white">
+                            All
+                        </button>
+                        <button onclick="filterProducts('men')" data-filter="men" class="filter-btn px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition text-zinc-600 hover:text-zinc-900">
+                            Men
+                        </button>
+                        <button onclick="filterProducts('women')" data-filter="women" class="filter-btn px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition text-zinc-600 hover:text-zinc-900">
+                            Women
+                        </button>
+                        <button onclick="filterProducts('kids')" data-filter="kids" class="filter-btn px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition text-zinc-600 hover:text-zinc-900">
+                            Kids
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Products Grid (Populated Dynamically via JS) -->
+            <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Product Cards injected here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- =====================================================================
+         DARK CHARCOAL FOOTER
+    ====================================================================== -->
+    <footer class="bg-zinc-950 text-zinc-300 pt-16 pb-10 px-6 md:px-12 lg:px-20">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-10 pb-12 border-b border-zinc-800">
+            <!-- Brand Info -->
+            <div class="md:col-span-2 space-y-4">
+                <a href="#" class="text-white font-heading font-bold text-3xl tracking-tight inline-block">
+                    <span id="footer-brand-name">OutfitHub</span><span class="text-amber-400 font-extrabold">.pk</span>
+                </a>
+                <p class="text-zinc-400 text-sm max-w-md leading-relaxed">
+                    Warmth &amp; style crafted for the modern Pakistani family. Premium winter jackets, cozy fleece, eastern shawls, and everyday essentials delivered nationwide.
+                </p>
+                <div class="flex items-center gap-3 pt-2">
+                    <a href="#" aria-label="Instagram" class="w-10 h-10 rounded-full bg-zinc-900 hover:bg-amber-500 hover:text-zinc-950 flex items-center justify-center transition">
+                        <i class="fa-brands fa-instagram"></i>
+                    </a>
+                    <a href="#" aria-label="Facebook" class="w-10 h-10 rounded-full bg-zinc-900 hover:bg-amber-500 hover:text-zinc-950 flex items-center justify-center transition">
+                        <i class="fa-brands fa-facebook-f"></i>
+                    </a>
+                    <a href="#" aria-label="TikTok" class="w-10 h-10 rounded-full bg-zinc-900 hover:bg-amber-500 hover:text-zinc-950 flex items-center justify-center transition">
+                        <i class="fa-brands fa-tiktok"></i>
+                    </a>
+                    <a href="#" aria-label="WhatsApp" class="w-10 h-10 rounded-full bg-zinc-900 hover:bg-emerald-500 hover:text-white flex items-center justify-center transition">
+                        <i class="fa-brands fa-whatsapp"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Quick Category Links -->
+            <div>
+                <h4 class="text-white font-heading font-bold text-sm uppercase tracking-wider mb-4">Categories</h4>
+                <ul class="space-y-2.5 text-sm text-zinc-400">
+                    <li><a href="#shop" onclick="filterProducts('men')" class="hover:text-white transition">Men's Winter Wear</a></li>
+                    <li><a href="#shop" onclick="filterProducts('women')" class="hover:text-white transition">Women's Collection</a></li>
+                    <li><a href="#shop" onclick="filterProducts('kids')" class="hover:text-white transition">Kids' Cozy Apparel</a></li>
+                    <li><a href="#shop" onclick="filterProducts('all')" class="hover:text-amber-400 transition">New Arrivals 2026</a></li>
+                </ul>
+            </div>
+
+            <!-- Customer Support -->
+            <div>
+                <h4 class="text-white font-heading font-bold text-sm uppercase tracking-wider mb-4">Customer Care</h4>
+                <ul class="space-y-2.5 text-sm text-zinc-400">
+                    <li class="flex items-center gap-2"><i class="fa-brands fa-whatsapp text-emerald-400"></i> <span id="footer-whatsapp-display">+92 300 0000000</span></li>
+                    <li class="flex items-center gap-2"><i class="fa-regular fa-envelope text-amber-400"></i> support@outfithub.pk</li>
+                    <li class="flex items-center gap-2"><i class="fa-solid fa-location-dot text-zinc-500"></i> Lahore • Karachi • Islamabad</li>
+                    <li class="text-xs text-zinc-500 pt-1">Mon - Sat: 10:00 AM - 8:00 PM</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="max-w-7xl mx-auto pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-zinc-500 gap-4">
+            <p>&copy; 2026 OutfitHub.pk. All rights reserved.</p>
+            <div class="flex items-center gap-4">
+                <span>Designed for Seamless Shopping across Pakistan.</span>
+                <button onclick="openAdminModal()" class="text-zinc-400 hover:text-amber-400 underline font-medium transition">Admin Login</button>
+            </div>
+        </div>
+    </footer>
+
+    <!-- =====================================================================
+         SLIDE-OUT SHOPPING CART & WHATSAPP CHECKOUT DRAWER
+    ====================================================================== -->
+    <div id="cart-overlay" onclick="toggleCart()" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 hidden transition-opacity"></div>
+    
+    <aside id="cart-drawer" class="fixed top-0 right-0 h-full w-full sm:w-[440px] bg-white z-50 shadow-2xl transform translate-x-full transition-transform duration-300 flex flex-col">
+        <!-- Drawer Header -->
+        <div class="p-6 border-b border-zinc-200 flex items-center justify-between bg-zinc-900 text-white">
+            <div class="flex items-center gap-3">
+                <i class="fa-solid fa-bag-shopping text-amber-400 text-xl"></i>
+                <div>
+                    <h3 class="font-heading font-bold text-lg">Your Shopping Bag</h3>
+                    <p id="cart-subtitle" class="text-xs text-zinc-400">0 items selected</p>
+                </div>
+            </div>
+            <button onclick="toggleCart()" class="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <!-- Cart Items Container (Scrollable) -->
+        <div id="cart-items-container" class="flex-1 overflow-y-auto p-6 space-y-4">
+            <!-- Empty state or cart items injected via JS -->
+        </div>
+
+        <!-- Customer Details & WhatsApp Checkout Section -->
+        <div id="cart-footer" class="p-6 border-t border-zinc-200 bg-zinc-50 space-y-4 hidden">
+            <!-- Subtotal -->
+            <div class="flex items-center justify-between text-base font-bold text-zinc-900">
+                <span>Total Amount (PKR):</span>
+                <span id="cart-total" class="text-xl font-heading text-zinc-950">Rs. 0</span>
+            </div>
+
+            <!-- Delivery Details Inputs -->
+            <div class="space-y-2.5 pt-2 border-t border-zinc-200">
+                <p class="text-xs font-bold uppercase tracking-wider text-zinc-500">Delivery Details (Cash on Delivery)</p>
+                <input type="text" id="cust-name" placeholder="Your Full Name *" class="w-full px-3.5 py-2.5 text-sm bg-white border border-zinc-300 rounded-xl focus:outline-none focus:border-zinc-900">
+                <div class="grid grid-cols-2 gap-2">
+                    <input type="tel" id="cust-phone" placeholder="Mobile / WhatsApp *" class="w-full px-3.5 py-2.5 text-sm bg-white border border-zinc-300 rounded-xl focus:outline-none focus:border-zinc-900">
+                    <input type="text" id="cust-city" placeholder="City (e.g. Lahore) *" class="w-full px-3.5 py-2.5 text-sm bg-white border border-zinc-300 rounded-xl focus:outline-none focus:border-zinc-900">
+                </div>
+                <input type="text" id="cust-address" placeholder="Complete Street Address *" class="w-full px-3.5 py-2.5 text-sm bg-white border border-zinc-300 rounded-xl focus:outline-none focus:border-zinc-900">
+            </div>
+
+            <!-- Order via WhatsApp Button -->
+            <button onclick="checkoutViaWhatsApp()" class="w-full py-3.5 px-6 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-heading font-bold text-sm tracking-wide flex items-center justify-center gap-2.5 shadow-lg hover:shadow-emerald-600/30 transition duration-200">
+                <i class="fa-brands fa-whatsapp text-xl"></i>
+                Order via WhatsApp
+            </button>
+        </div>
+    </aside>
+
+    <!-- =====================================================================
+         STORE OWNER ADMIN PANEL MODAL (NO-CODE MANAGEMENT DASHBOARD)
+    ====================================================================== -->
+    <div id="admin-modal" class="fixed inset-0 z-50 hidden bg-zinc-950/80 backdrop-blur-md flex items-center justify-center p-2 sm:p-6 overflow-y-auto">
+        
+        <!-- 1. ADMIN LOGIN SCREEN -->
+        <div id="admin-login-box" class="bg-white w-full max-w-md rounded-3xl p-8 shadow-2xl border border-zinc-200 relative">
+            <button onclick="closeAdminModal()" class="absolute top-5 right-5 w-9 h-9 rounded-full bg-zinc-100 hover:bg-zinc-200 flex items-center justify-center text-zinc-600 transition">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="text-center space-y-2 mb-6">
+                <div class="w-14 h-14 rounded-2xl bg-zinc-900 text-amber-400 flex items-center justify-center text-2xl mx-auto shadow-md">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <h2 class="font-heading font-extrabold text-2xl text-zinc-900">Store Admin Panel</h2>
+                <p class="text-xs text-zinc-500">Manage products, orders, &amp; store settings without coding</p>
+            </div>
+
+            <form onsubmit="handleAdminLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-zinc-600 mb-1.5">Admin Password</label>
+                    <input type="password" id="admin-password-input" placeholder="Enter password..." required class="w-full px-4 py-3 rounded-xl border border-zinc-300 text-sm focus:outline-none focus:border-zinc-900">
+                </div>
+
+                <!-- Helpful Demo Password Hint -->
+                <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 flex items-center justify-between text-xs text-amber-900">
+                    <span><i class="fa-solid fa-circle-info text-amber-600 mr-1"></i> Default Password:</span>
+                    <code class="font-bold bg-white px-2 py-0.5 rounded border border-amber-300 select-all">admin123</code>
+                </div>
+
+                <button type="submit" class="w-full py-3.5 rounded-full bg-zinc-900 hover:bg-amber-500 hover:text-zinc-950 text-white font-heading font-bold text-sm uppercase tracking-wider transition shadow-lg">
+                    Unlock Dashboard
+                </button>
+            </form>
+        </div>
+
+        <!-- 2. FULL ADMIN DASHBOARD (Shown after login) -->
+        <div id="admin-dashboard" class="hidden bg-zinc-50 w-full max-w-6xl h-[92vh] rounded-3xl shadow-2xl border border-zinc-200 overflow-hidden flex flex-col md:flex-row">
+            
+            <!-- Admin Sidebar -->
+            <aside class="w-full md:w-64 bg-zinc-950 text-white p-5 flex flex-col justify-between shrink-0">
+                <div>
+                    <div class="flex items-center justify-between md:justify-start gap-2 pb-5 border-b border-zinc-800">
+                        <div class="flex items-center gap-2">
+                            <span class="w-8 h-8 rounded-xl bg-amber-500 text-zinc-950 flex items-center justify-center font-extrabold text-sm">OH</span>
+                            <div>
+                                <h3 class="font-heading font-bold text-base leading-none">OutfitHub Admin</h3>
+                                <span class="text-[10px] text-emerald-400 font-medium">● Live Store Connected</span>
+                            </div>
+                        </div>
+                        <button onclick="closeAdminModal()" class="md:hidden text-zinc-400 hover:text-white p-1">
+                            <i class="fa-solid fa-xmark text-xl"></i>
+                        </button>
+                    </div>
+
+                    <!-- Navigation Tabs -->
+                    <nav class="mt-5 flex md:flex-col gap-2 overflow-x-auto pb-2 md:pb-0">
+                        <button onclick="switchAdminTab('overview')" id="admin-nav-overview" class="admin-nav-btn active flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-bold uppercase tracking-wider bg-amber-500 text-zinc-950 transition whitespace-nowrap">
+                            <i class="fa-solid fa-chart-pie w-4 text-center"></i> Overview
+                        </button>
+                        <button onclick="switchAdminTab('products')" id="admin-nav-products" class="admin-nav-btn flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-bold uppercase tracking-wider text-zinc-400 hover:bg-zinc-900 hover:text-white transition whitespace-nowrap">
+                            <i class="fa-solid fa-shirt w-4 text-center"></i> Products (<span id="sidebar-prod-count">0</span>)
+                        </button>
+                        <button onclick="switchAdminTab('orders')" id="admin-nav-orders" class="admin-nav-btn flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-bold uppercase tracking-wider text-zinc-400 hover:bg-zinc-900 hover:text-white transition whitespace-nowrap">
+                            <i class="fa-solid fa-box-open w-4 text-center"></i> Orders (<span id="sidebar-order-count">0</span>)
+                        </button>
+                        <button onclick="switchAdminTab('settings')" id="admin-nav-settings" class="admin-nav-btn flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-bold uppercase tracking-wider text-zinc-400 hover:bg-zinc-900 hover:text-white transition whitespace-nowrap">
+                            <i class="fa-solid fa-gear w-4 text-center"></i> Store Settings
+                        </button>
+                    </nav>
+                </div>
+
+                <div class="hidden md:flex flex-col gap-2 pt-4 border-t border-zinc-800">
+                    <button onclick="closeAdminModal()" class="w-full py-2.5 px-4 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-zinc-300 text-xs font-semibold flex items-center justify-center gap-2 transition">
+                        <i class="fa-solid fa-store"></i> View Live Storefront
+                    </button>
+                    <button onclick="logoutAdmin()" class="w-full py-2.5 px-4 rounded-xl text-red-400 hover:bg-red-950/50 text-xs font-semibold flex items-center justify-center gap-2 transition">
+                        <i class="fa-solid fa-right-from-bracket"></i> Lock Admin Panel
+                    </button>
+                </div>
+            </aside>
+
+            <!-- Admin Main Content Area -->
+            <main class="flex-1 overflow-y-auto p-6 md:p-8">
+                
+                <!-- TAB A: DASHBOARD OVERVIEW -->
+                <section id="admin-tab-overview" class="admin-tab-content space-y-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h2 class="font-heading font-extrabold text-2xl text-zinc-900">Dashboard Overview</h2>
+                            <p class="text-xs text-zinc-500">Real-time summary of your clothing store</p>
+                        </div>
+                        <button onclick="closeAdminModal()" class="hidden md:inline-flex items-center gap-2 px-4 py-2 rounded-full bg-zinc-900 text-white text-xs font-bold hover:bg-zinc-800">
+                            <i class="fa-solid fa-xmark"></i> Close Panel
+                        </button>
+                    </div>
+
+                    <!-- KPI Cards -->
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+                        <div class="bg-white p-6 rounded-2xl border border-zinc-200 shadow-xs">
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs font-bold uppercase text-zinc-400">Total Products</span>
+                                <span class="w-10 h-10 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center"><i class="fa-solid fa-shirt"></i></span>
+                            </div>
+                            <p id="stat-total-products" class="font-heading font-extrabold text-3xl text-zinc-900 mt-3">0</p>
+                            <p class="text-xs text-zinc-500 mt-1">Active items in catalog</p>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-2xl border border-zinc-200 shadow-xs">
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs font-bold uppercase text-zinc-400">Total Orders</span>
+                                <span class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center"><i class="fa-solid fa-bag-shopping"></i></span>
+                            </div>
+                            <p id="stat-total-orders" class="font-heading font-extrabold text-3xl text-zinc-900 mt-3">0</p>
+                            <p class="text-xs text-zinc-500 mt-1">Placed via WhatsApp checkout</p>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-2xl border border-zinc-200 shadow-xs">
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs font-bold uppercase text-zinc-400">Estimated Revenue</span>
+                                <span class="w-10 h-10 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center"><i class="fa-solid fa-coins"></i></span>
+                            </div>
+                            <p id="stat-total-revenue" class="font-heading font-extrabold text-3xl text-zinc-900 mt-3">Rs. 0</p>
+                            <p class="text-xs text-zinc-500 mt-1">Cumulative order value</p>
+                        </div>
+                    </div>
+
+                    <!-- Category Breakdown -->
+                    <div class="bg-white p-6 rounded-2xl border border-zinc-200 shadow-xs">
+                        <h3 class="font-heading font-bold text-base text-zinc-900 mb-4">Inventory by Category</h3>
+                        <div class="grid grid-cols-3 gap-4 text-center">
+                            <div class="p-4 rounded-xl bg-zinc-50 border border-zinc-200">
+                                <span class="text-xs font-bold uppercase text-zinc-500">Men</span>
+                                <p id="stat-cat-men" class="font-heading font-extrabold text-2xl text-zinc-900 mt-1">0</p>
+                            </div>
+                            <div class="p-4 rounded-xl bg-zinc-50 border border-zinc-200">
+                                <span class="text-xs font-bold uppercase text-zinc-500">Women</span>
+                                <p id="stat-cat-women" class="font-heading font-extrabold text-2xl text-zinc-900 mt-1">0</p>
+                            </div>
+                            <div class="p-4 rounded-xl bg-zinc-50 border border-zinc-200">
+                                <span class="text-xs font-bold uppercase text-zinc-500">Kids</span>
+                                <p id="stat-cat-kids" class="font-heading font-extrabold text-2xl text-zinc-900 mt-1">0</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="bg-zinc-900 text-white p-6 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4">
+                        <div>
+                            <h4 class="font-heading font-bold text-lg">Want to add a new winter outfit?</h4>
+                            <p class="text-xs text-zinc-400">Upload a picture from your phone or PC and publish it immediately.</p>
+                        </div>
+                        <button onclick="switchAdminTab('products')" class="px-6 py-3 rounded-full bg-amber-500 hover:bg-amber-400 text-zinc-950 font-heading font-bold text-xs uppercase tracking-wider shrink-0">
+                            + Add New Product
+                        </button>
+                    </div>
+                </section>
+
+                <!-- TAB B: MANAGE PRODUCTS (ADD / EDIT / DELETE) -->
+                <section id="admin-tab-products" class="admin-tab-content hidden space-y-8">
+                    <div class="flex flex-wrap items-center justify-between gap-3">
+                        <div>
+                            <h2 class="font-heading font-extrabold text-2xl text-zinc-900">Manage Products</h2>
+                            <p class="text-xs text-zinc-500">Add new clothing items, edit prices, or upload product images</p>
+                        </div>
+                        <button onclick="resetDefaultProducts()" class="px-4 py-2 rounded-full bg-zinc-200 hover:bg-zinc-300 text-zinc-800 text-xs font-bold transition">
+                            <i class="fa-solid fa-rotate-left mr-1"></i> Reset Default Products
+                        </button>
+                    </div>
+
+                    <!-- Add / Edit Product Form Card -->
+                    <div class="bg-white p-6 rounded-2xl border border-zinc-200 shadow-xs">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 id="product-form-title" class="font-heading font-bold text-lg text-zinc-900">Add New Product</h3>
+                            <button type="button" id="cancel-edit-btn" onclick="resetProductForm()" class="hidden text-xs font-bold text-red-600 hover:underline">Cancel Edit</button>
+                        </div>
+
+                        <form id="admin-product-form" onsubmit="saveProductFromAdmin(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <input type="hidden" id="edit-product-id" value="">
+
+                            <div>
+                                <label class="block text-xs font-bold text-zinc-600 mb-1">Product Name *</label>
+                                <input type="text" id="prod-name" required placeholder="e.g. Men's Velvet Bomber Jacket" class="w-full px-3.5 py-2.5 rounded-xl border border-zinc-300 text-sm focus:outline-none focus:border-zinc-900">
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-xs font-bold text-zinc-600 mb-1">Category *</label>
+                                    <select id="prod-category" class="w-full px-3.5 py-2.5 rounded-xl border border-zinc-300 text-sm bg-white focus:outline-none focus:border-zinc-900">
+                                        <option value="men">Men</option>
+                                        <option value="women">Women</option>
+                                        <option value="kids">Kids</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-zinc-600 mb-1">Badge Tag</label>
+                                    <select id="prod-tag" class="w-full px-3.5 py-2.5 rounded-xl border border-zinc-300 text-sm bg-white focus:outline-none focus:border-zinc-900">
+                                        <option value="New Arrival">New Arrival</option>
+                                        <option value="Bestseller">Bestseller</option>
+                                        <option value="Winter Sale">Winter Sale</option>
+                                        <option value="Limited Stock">Limited Stock</option>
+                                        <option value="">None</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-xs font-bold text-zinc-600 mb-1">Sale Price (PKR) *</label>
+                                    <input type="number" id="prod-price" required min="1" placeholder="e.g. 4500" class="w-full px-3.5 py-2.5 rounded-xl border border-zinc-300 text-sm focus:outline-none focus:border-zinc-900">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-zinc-600 mb-1">Cut / Original Price (Optional)</label>
+                                    <input type="number" id="prod-old-price" min="0" placeholder="e.g. 5500" class="w-full px-3.5 py-2.5 rounded-xl border border-zinc-300 text-sm focus:outline-none focus:border-zinc-900">
+                                </div>
+                            </div>
+
+                            <!-- Available Sizes Checkboxes -->
+                            <div>
+                                <label class="block text-xs font-bold text-zinc-600 mb-1.5">Available Sizes *</label>
+                                <div class="flex flex-wrap gap-2">
+                                    <label class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-zinc-300 text-xs font-semibold cursor-pointer bg-zinc-50">
+                                        <input type="checkbox" name="prod-sizes" value="S" checked> S
+                                    </label>
+                                    <label class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-zinc-300 text-xs font-semibold cursor-pointer bg-zinc-50">
+                                        <input type="checkbox" name="prod-sizes" value="M" checked> M
+                                    </label>
+                                    <label class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-zinc-300 text-xs font-semibold cursor-pointer bg-zinc-50">
+                                        <input type="checkbox" name="prod-sizes" value="L" checked> L
+                                    </label>
+                                    <label class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-zinc-300 text-xs font-semibold cursor-pointer bg-zinc-50">
+                                        <input type="checkbox" name="prod-sizes" value="XL" checked> XL
+                                    </label>
+                                    <label class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-zinc-300 text-xs font-semibold cursor-pointer bg-zinc-50">
+                                        <input type="checkbox" name="prod-sizes" value="Kids (4-12Y)"> Kids (4-12Y)
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Image Upload OR URL -->
+                            <div class="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4 bg-zinc-50 p-4 rounded-xl border border-zinc-200">
+                                <div>
+                                    <label class="block text-xs font-bold text-zinc-700 mb-1">
+                                        <i class="fa-solid fa-upload text-amber-600 mr-1"></i> Upload Photo from Device
+                                    </label>
+                                    <input type="file" id="prod-image-file" accept="image/*" onchange="handleProductImageUpload(event)" class="w-full text-xs text-zinc-600 file:mr-3 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-zinc-900 file:text-white hover:file:bg-zinc-700 cursor-pointer">
+                                    <p class="text-[11px] text-zinc-400 mt-1">Select JPG/PNG from phone or computer</p>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-zinc-700 mb-1">OR Paste Image URL</label>
+                                    <input type="text" id="prod-image-url" placeholder="https://example.com/jacket.jpg" class="w-full px-3.5 py-2 rounded-xl border border-zinc-300 text-xs bg-white focus:outline-none focus:border-zinc-900">
+                                </div>
+                            </div>
+
+                            <div class="md:col-span-2 flex justify-end">
+                                <button type="submit" id="save-product-btn" class="px-8 py-3 rounded-full bg-zinc-900 hover:bg-amber-500 hover:text-zinc-950 text-white font-heading font-bold text-xs uppercase tracking-wider transition shadow-md">
+                                    Save &amp; Publish Product
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Existing Products List -->
+                    <div class="bg-white rounded-2xl border border-zinc-200 shadow-xs overflow-hidden">
+                        <div class="p-5 border-b border-zinc-200 flex items-center justify-between">
+                            <h3 class="font-heading font-bold text-base text-zinc-900">All Store Products</h3>
+                            <span class="text-xs text-zinc-500">Click Edit to update price/photo</span>
+                        </div>
+                        <div id="admin-products-list" class="divide-y divide-zinc-200">
+                            <!-- Admin Product Rows injected via JS -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- TAB C: CUSTOMER ORDERS -->
+                <section id="admin-tab-orders" class="admin-tab-content hidden space-y-6">
+                    <div class="flex flex-wrap items-center justify-between gap-3">
+                        <div>
+                            <h2 class="font-heading font-extrabold text-2xl text-zinc-900">Customer Orders</h2>
+                            <p class="text-xs text-zinc-500">Orders placed through your website checkout appear here automatically</p>
+                        </div>
+                        <button onclick="clearAllOrders()" class="px-4 py-2 rounded-full bg-red-50 hover:bg-red-100 text-red-600 text-xs font-bold transition">
+                            <i class="fa-solid fa-trash mr-1"></i> Clear All Orders
+                        </button>
+                    </div>
+
+                    <div id="admin-orders-list" class="space-y-4">
+                        <!-- Orders injected via JS -->
+                    </div>
+                </section>
+
+                <!-- TAB D: STORE SETTINGS (NO-CODE CUSTOMIZATION) -->
+                <section id="admin-tab-settings" class="admin-tab-content hidden space-y-6">
+                    <div>
+                        <h2 class="font-heading font-extrabold text-2xl text-zinc-900">Store Settings</h2>
+                        <p class="text-xs text-zinc-500">Customize your WhatsApp number, landing page text, banner image, and password</p>
+                    </div>
+
+                    <form onsubmit="saveStoreSettings(event)" class="bg-white p-6 rounded-2xl border border-zinc-200 shadow-xs space-y-5">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            <div>
+                                <label class="block text-xs font-bold text-zinc-700 mb-1">WhatsApp Order Number (with 92) *</label>
+                                <input type="text" id="set-whatsapp" required placeholder="923001234567" class="w-full px-4 py-2.5 rounded-xl border border-zinc-300 text-sm focus:outline-none focus:border-zinc-900">
+                                <p class="text-[11px] text-zinc-400 mt-1">Format: 923001234567 (no + or spaces)</p>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold text-zinc-700 mb-1">Brand Name (before .pk) *</label>
+                                <input type="text" id="set-brand" required placeholder="OutfitHub" class="w-full px-4 py-2.5 rounded-xl border border-zinc-300 text-sm focus:outline-none focus:border-zinc-900">
+                            </div>
+
+                            <div class="md:col-span-2">
+                                <label class="block text-xs font-bold text-zinc-700 mb-1">Hero Main Headline *</label>
+                                <input type="text" id="set-headline" required class="w-full px-4 py-2.5 rounded-xl border border-zinc-300 text-sm focus:outline-none focus:border-zinc-900">
+                            </div>
+
+                            <div class="md:col-span-2">
+                                <label class="block text-xs font-bold text-zinc-700 mb-1">Hero Subheadline *</label>
+                                <textarea id="set-subtitle" rows="2" required class="w-full px-4 py-2.5 rounded-xl border border-zinc-300 text-sm focus:outline-none focus:border-zinc-900"></textarea>
+                            </div>
+
+                            <!-- Hero Background Banner Upload or URL -->
+                            <div class="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4 bg-zinc-50 p-4 rounded-xl border border-zinc-200">
+                                <div>
+                                    <label class="block text-xs font-bold text-zinc-700 mb-1">Upload New Hero Banner Photo</label>
+                                    <input type="file" accept="image/*" onchange="handleHeroBannerUpload(event)" class="w-full text-xs text-zinc-600 file:mr-3 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-zinc-900 file:text-white cursor-pointer">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-zinc-700 mb-1">OR Hero Banner Image URL</label>
+                                    <input type="text" id="set-hero-img" class="w-full px-3.5 py-2 rounded-xl border border-zinc-300 text-xs bg-white focus:outline-none focus:border-zinc-900">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold text-zinc-700 mb-1">Change Admin Password *</label>
+                                <input type="text" id="set-password" required class="w-full px-4 py-2.5 rounded-xl border border-zinc-300 text-sm focus:outline-none focus:border-zinc-900">
+                            </div>
+                        </div>
+
+                        <div class="pt-2 flex justify-end">
+                            <button type="submit" class="px-8 py-3 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-heading font-bold text-xs uppercase tracking-wider transition shadow-md">
+                                Save Store Settings
+                            </button>
+                        </div>
+                    </form>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <!-- Custom Toast Notification Box (Replaces alert()) -->
+    <div id="toast-box" class="fixed bottom-6 right-6 z-50 hidden">
+        <div id="toast-content" class="bg-zinc-900 text-white px-5 py-3.5 rounded-2xl shadow-2xl border border-zinc-700 flex items-center gap-3 text-sm font-medium">
+            <i id="toast-icon" class="fa-solid fa-circle-check text-emerald-400 text-lg"></i>
+            <span id="toast-message">Item added to bag!</span>
+        </div>
+    </div>
+
+    <!-- =====================================================================
+         JAVASCRIPT LOGIC: PRODUCTS, FILTERING, CART & WHATSAPP ORDERING
+    ====================================================================== -->
+    <script>
+        // ===================================================================
+        // DEFAULT DATA & LOCALSTORAGE PERSISTENCE
+        // ===================================================================
+        const DEFAULT_SETTINGS = {
+            whatsappNumber: "923000000000",
+            brandName: "OutfitHub",
+            heroHeadline: "Warmth & Style For The Whole Family",
+            heroSubtitle: "Explore the New Winter Collection. Cozy fleece, jackets, & seasonal wear crafted for everyone.",
+            heroImage: "https://images.unsplash.com/photo-1511895426328-dc8714191300?auto=format&fit=crop&w=2000&q=85",
+            adminPassword: "admin123"
+        };
+
+        const DEFAULT_PRODUCTS = [
+            // --- MEN'S PRODUCTS ---
+            {
+                id: 1,
+                name: "Charcoal Wool Overcoat",
+                category: "men",
+                tag: "Bestseller",
+                price: 6850,
+                oldPrice: 8200,
+                image: "https://images.unsplash.com/photo-1544022613-e87ca75a784a?auto=format&fit=crop&w=800&q=80",
+                sizes: ["S", "M", "L", "XL"]
+            },
+            {
+                id: 2,
+                name: "Thermal Fleece Pullover Hoodie",
+                category: "men",
+                tag: "Cozy Fit",
+                price: 3450,
+                oldPrice: null,
+                image: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=800&q=80",
+                sizes: ["S", "M", "L", "XL"]
+            },
+            {
+                id: 3,
+                name: "Olive Quilted Puffer Jacket",
+                category: "men",
+                tag: "New Arrival",
+                price: 5200,
+                oldPrice: 6000,
+                image: "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?auto=format&fit=crop&w=800&q=80",
+                sizes: ["M", "L", "XL"]
+            },
+
+            // --- WOMEN'S PRODUCTS ---
+            {
+                id: 4,
+                name: "Maroon Embroidered Winter Shawl Suit",
+                category: "women",
+                tag: "Festive Winter",
+                price: 5490,
+                oldPrice: 6500,
+                image: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=800&q=80",
+                sizes: ["S", "M", "L", "XL"]
+            },
+            {
+                id: 5,
+                name: "Camel Classic Trench Coat",
+                category: "women",
+                tag: "Trending",
+                price: 6400,
+                oldPrice: null,
+                image: "https://images.unsplash.com/photo-1539533018447-63fcce2678e3?auto=format&fit=crop&w=800&q=80",
+                sizes: ["S", "M", "L"]
+            },
+            {
+                id: 6,
+                name: "Soft Cashmere Knit Cardigan",
+                category: "women",
+                tag: "Warm & Soft",
+                price: 3890,
+                oldPrice: 4500,
+                image: "https://images.unsplash.com/photo-1576566588028-4147f3842f27?auto=format&fit=crop&w=800&q=80",
+                sizes: ["S", "M", "L", "XL"]
+            },
+
+            // --- KIDS' PRODUCTS ---
+            {
+                id: 7,
+                name: "Kids Colorblock Fleece Jacket",
+                category: "kids",
+                tag: "Kids Favorite",
+                price: 2950,
+                oldPrice: null,
+                image: "https://images.unsplash.com/photo-1503919545889-aef636e10ad4?auto=format&fit=crop&w=800&q=80",
+                sizes: ["4-6Y", "7-9Y", "10-12Y"]
+            },
+            {
+                id: 8,
+                name: "Cozy Winter Hoodie & Trouser Set",
+                category: "kids",
+                tag: "2-Piece Set",
+                price: 3200,
+                oldPrice: 3800,
+                image: "https://images.unsplash.com/photo-1519457431-44ccd64a579b?auto=format&fit=crop&w=800&q=80",
+                sizes: ["4-6Y", "7-9Y", "10-12Y"]
+            },
+            {
+                id: 9,
+                name: "Junior Warm Puffer Vest & Beanie",
+                category: "kids",
+                tag: "Limited Stock",
+                price: 2750,
+                oldPrice: null,
+                image: "https://images.unsplash.com/photo-1622290291468-a28f7a7dc6a8?auto=format&fit=crop&w=800&q=80",
+                sizes: ["4-6Y", "7-9Y", "10-12Y"]
+            }
+        ];
+
+        // Load State from localStorage
+        let storeSettings = JSON.parse(localStorage.getItem('outfithub_settings')) || { ...DEFAULT_SETTINGS };
+        let products = JSON.parse(localStorage.getItem('outfithub_products')) || [...DEFAULT_PRODUCTS];
+        let orders = JSON.parse(localStorage.getItem('outfithub_orders')) || [];
+
+        let cart = [];
+        let selectedSizes = {};
+        let currentFilter = 'all';
+        let searchQuery = '';
+        let isAdminAuthenticated = false;
+
+        function syncSelectedSizes() {
+            products.forEach(p => {
+                if (!selectedSizes[p.id] || !p.sizes.includes(selectedSizes[p.id])) {
+                    selectedSizes[p.id] = p.sizes[1] || p.sizes[0] || 'M';
+                }
+            });
+        }
+        syncSelectedSizes();
+
+        // Apply Store Settings to Live Storefront
+        function applyStoreSettingsToUI() {
+            document.getElementById('nav-brand-name').textContent = storeSettings.brandName;
+            document.getElementById('footer-brand-name').textContent = storeSettings.brandName;
+            document.getElementById('hero-headline').textContent = storeSettings.heroHeadline;
+            document.getElementById('hero-subtitle').textContent = storeSettings.heroSubtitle;
+            document.getElementById('hero-bg-img').src = storeSettings.heroImage;
+            document.getElementById('footer-whatsapp-display').textContent = `+${storeSettings.whatsappNumber}`;
+            document.title = `${storeSettings.brandName}.pk | ${storeSettings.heroHeadline}`;
+        }
+
+        // ===================================================================
+        // RENDER PRODUCTS GRID (WITH CATEGORY FILTER & SEARCH)
+        // ===================================================================
+        function renderProducts(category = currentFilter) {
+            const grid = document.getElementById('products-grid');
+            const tabAll = document.getElementById('tab-all');
+            if (tabAll) tabAll.textContent = `All (${products.length})`;
+
+            let filtered = category === 'all' 
+                ? products 
+                : products.filter(p => p.category === category);
+
+            if (searchQuery.trim() !== '') {
+                const q = searchQuery.toLowerCase();
+                filtered = filtered.filter(p => 
+                    p.name.toLowerCase().includes(q) || 
+                    p.category.toLowerCase().includes(q) ||
+                    (p.tag && p.tag.toLowerCase().includes(q))
+                );
+            }
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full text-center py-16 bg-white rounded-3xl border border-zinc-200">
+                        <i class="fa-solid fa-shirt text-4xl text-zinc-300 mb-3"></i>
+                        <h3 class="font-heading font-bold text-lg text-zinc-800">No products found</h3>
+                        <p class="text-xs text-zinc-500 mt-1">Try switching category or clearing your search filter.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = filtered.map(product => {
+                const activeSize = selectedSizes[product.id] || product.sizes[0];
+                return `
+                    <div class="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-zinc-200/80 flex flex-col group">
+                        <!-- Product Image -->
+                        <div class="relative h-80 overflow-hidden bg-zinc-200">
+                            <img 
+                                src="${product.image}" 
+                                onerror="this.src='https://placehold.co/600x750/e4e4e7/18181b?text=${encodeURIComponent(product.name)}'"
+                                alt="${product.name}" 
+                                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                            >
+                            ${product.tag ? `
+                                <span class="absolute top-4 left-4 px-3 py-1 rounded-full bg-zinc-900/85 backdrop-blur-md text-white text-[11px] font-bold uppercase tracking-wider">
+                                    ${product.tag}
+                                </span>
+                            ` : ''}
+                            <span class="absolute top-4 right-4 px-3 py-1 rounded-full bg-white/90 text-zinc-900 text-[11px] font-extrabold uppercase">
+                                ${product.category}
+                            </span>
+                        </div>
+
+                        <!-- Product Info -->
+                        <div class="p-6 flex-1 flex flex-col justify-between space-y-4">
+                            <div>
+                                <h3 class="font-heading font-bold text-lg text-zinc-900 leading-snug">${product.name}</h3>
+                                <div class="flex items-baseline gap-2.5 mt-1.5">
+                                    <p class="text-xl font-extrabold text-amber-600">Rs. ${Number(product.price).toLocaleString()}</p>
+                                    ${product.oldPrice ? `<span class="text-xs text-zinc-400 line-through">Rs. ${Number(product.oldPrice).toLocaleString()}</span>` : ''}
+                                </div>
+                            </div>
+
+                            <!-- Size Selector -->
+                            <div>
+                                <span class="text-xs font-semibold text-zinc-500 uppercase tracking-wider block mb-2">Select Size:</span>
+                                <div class="flex flex-wrap gap-2">
+                                    ${product.sizes.map(size => `
+                                        <button 
+                                            onclick="selectProductSize(${product.id}, '${size}')"
+                                            class="px-3 py-1.5 rounded-xl text-xs font-bold border transition ${
+                                                activeSize === size 
+                                                ? 'bg-zinc-900 text-white border-zinc-900 shadow-xs' 
+                                                : 'bg-zinc-50 text-zinc-700 border-zinc-200 hover:border-zinc-400'
+                                            }">
+                                            ${size}
+                                        </button>
+                                    `).join('')}
+                                </div>
+                            </div>
+
+                            <!-- Add to Cart Button -->
+                            <button 
+                                onclick="addToCart(${product.id})"
+                                class="w-full py-3.5 px-5 rounded-full bg-zinc-900 hover:bg-amber-500 hover:text-zinc-950 text-white font-heading font-bold text-xs uppercase tracking-wider transition duration-200 flex items-center justify-center gap-2 shadow-sm">
+                                <i class="fa-solid fa-cart-plus"></i>
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function handleSearch(val) {
+            searchQuery = val;
+            renderProducts(currentFilter);
+        }
+
+        // Select Size Handler
+        function selectProductSize(productId, size) {
+            selectedSizes[productId] = size;
+            renderProducts(currentFilter);
+        }
+
+        // Filter Products & Update Active Tab Styling
+        function filterProducts(category) {
+            currentFilter = category;
+            renderProducts(category);
+
+            // Update active pill styling
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                if (btn.dataset.filter === category) {
+                    btn.classList.add('bg-zinc-900', 'text-white');
+                    btn.classList.remove('text-zinc-600');
+                } else {
+                    btn.classList.remove('bg-zinc-900', 'text-white');
+                    btn.classList.add('text-zinc-600');
+                }
+            });
+        }
+
+        // Hero & Category Card Click -> Smooth Scroll + Filter
+        function heroCategoryClick(category) {
+            filterProducts(category);
+            const shopSection = document.getElementById('shop');
+            shopSection.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function selectCategoryFromNav(category) {
+            filterProducts(category);
+        }
+
+        // ===================================================================
+        // WHATSAPP CHECKOUT FUNCTION + SAVE ORDER TO ADMIN PANEL
+        // ===================================================================
+        function checkoutViaWhatsApp() {
+            if (cart.length === 0) {
+                showToast("Your cart is empty!", true);
+                return;
+            }
+
+            const name = document.getElementById('cust-name').value.trim();
+            const phone = document.getElementById('cust-phone').value.trim();
+            const city = document.getElementById('cust-city').value.trim();
+            const address = document.getElementById('cust-address').value.trim();
+
+            if (!name || !phone || !city || !address) {
+                showToast("Please fill in your Name, Phone, City, and Address.", true);
+                return;
+            }
+
+            let orderLines = cart.map((item, index) => 
+                `${index + 1}. *${item.name}* (Size: ${item.size}) x${item.qty} = Rs. ${(item.price * item.qty).toLocaleString()}`
+            ).join('\n');
+
+            const totalAmount = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+
+            // Save Order into localStorage for Admin Panel
+            const newOrder = {
+                id: 'ORD-' + Math.floor(100000 + Math.random() * 900000),
+                date: new Date().toLocaleString('en-PK', { dateStyle: 'medium', timeStyle: 'short' }),
+                customerName: name,
+                phone: phone,
+                city: city,
+                address: address,
+                items: cart.map(i => `${i.name} (${i.size}) x${i.qty}`).join(', '),
+                total: totalAmount,
+                status: 'Pending'
+            };
+            orders.unshift(newOrder);
+            localStorage.setItem('outfithub_orders', JSON.stringify(orders));
+
+            const message = 
+`Assalam-o-Alaikum *${storeSettings.brandName}.pk*! 🛍️
+I would like to place a new Winter Collection order (*${newOrder.id}*):
+
+*--- ORDER ITEMS ---*
+${orderLines}
+
+*Total Bill (COD):* Rs. ${totalAmount.toLocaleString()}
+
+*--- DELIVERY DETAILS ---*
+*Name:* ${name}
+*Phone:* ${phone}
+*City:* ${city}
+*Address:* ${address}
+
+Please confirm my order. Thank you!`;
+
+            const whatsappUrl = `https://wa.me/${storeSettings.whatsappNumber}?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+            showToast(`Order ${newOrder.id} saved & opening WhatsApp!`);
+        }
+
+        // ===================================================================
+        // ADMIN PANEL CONTROLLER (LOGIN, PRODUCTS CRUD, ORDERS, SETTINGS)
+        // ===================================================================
+        function openAdminModal() {
+            document.getElementById('admin-modal').classList.remove('hidden');
+            if (isAdminAuthenticated) {
+                document.getElementById('admin-login-box').classList.add('hidden');
+                document.getElementById('admin-dashboard').classList.remove('hidden');
+                refreshAdminDashboard();
+            } else {
+                document.getElementById('admin-login-box').classList.remove('hidden');
+                document.getElementById('admin-dashboard').classList.add('hidden');
+                document.getElementById('admin-password-input').value = '';
+            }
+        }
+
+        function closeAdminModal() {
+            document.getElementById('admin-modal').classList.add('hidden');
+        }
+
+        function handleAdminLogin(e) {
+            e.preventDefault();
+            const entered = document.getElementById('admin-password-input').value;
+            if (entered === storeSettings.adminPassword) {
+                isAdminAuthenticated = true;
+                document.getElementById('admin-login-box').classList.add('hidden');
+                document.getElementById('admin-dashboard').classList.remove('hidden');
+                refreshAdminDashboard();
+                showToast("Welcome back, Store Admin!");
+            } else {
+                showToast("Incorrect password! Try 'admin123'", true);
+            }
+        }
+
+        function logoutAdmin() {
+            isAdminAuthenticated = false;
+            closeAdminModal();
+            showToast("Admin Panel Locked.");
+        }
+
+        function switchAdminTab(tabName) {
+            document.querySelectorAll('.admin-tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`admin-tab-${tabName}`).classList.remove('hidden');
+
+            document.querySelectorAll('.admin-nav-btn').forEach(btn => {
+                btn.classList.remove('bg-amber-500', 'text-zinc-950');
+                btn.classList.add('text-zinc-400');
+            });
+            const activeBtn = document.getElementById(`admin-nav-${tabName}`);
+            activeBtn.classList.add('bg-amber-500', 'text-zinc-950');
+            activeBtn.classList.remove('text-zinc-400');
+
+            refreshAdminDashboard();
+        }
+
+        function refreshAdminDashboard() {
+            // Update Counts & Stats
+            document.getElementById('sidebar-prod-count').textContent = products.length;
+            document.getElementById('sidebar-order-count').textContent = orders.length;
+            document.getElementById('stat-total-products').textContent = products.length;
+            document.getElementById('stat-total-orders').textContent = orders.length;
+
+            const totalRev = orders.reduce((sum, o) => sum + Number(o.total || 0), 0);
+            document.getElementById('stat-total-revenue').textContent = `Rs. ${totalRev.toLocaleString()}`;
+
+            document.getElementById('stat-cat-men').textContent = products.filter(p => p.category === 'men').length;
+            document.getElementById('stat-cat-women').textContent = products.filter(p => p.category === 'women').length;
+            document.getElementById('stat-cat-kids').textContent = products.filter(p => p.category === 'kids').length;
+
+            renderAdminProductsList();
+            renderAdminOrdersList();
+            populateSettingsForm();
+        }
+
+        // Convert Uploaded Image File to Base64 for No-Code Local Storage
+        function handleProductImageUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('prod-image-url').value = e.target.result;
+                showToast("Product image uploaded & ready!");
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function handleHeroBannerUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('set-hero-img').value = e.target.result;
+                showToast("Hero banner photo loaded! Click Save Store Settings.");
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Save New or Edited Product
+        function saveProductFromAdmin(e) {
+            e.preventDefault();
+            const editId = document.getElementById('edit-product-id').value;
+            const name = document.getElementById('prod-name').value.trim();
+            const category = document.getElementById('prod-category').value;
+            const tag = document.getElementById('prod-tag').value;
+            const price = Number(document.getElementById('prod-price').value);
+            const oldPriceVal = document.getElementById('prod-old-price').value;
+            const oldPrice = oldPriceVal ? Number(oldPriceVal) : null;
+            const imageUrl = document.getElementById('prod-image-url').value.trim() || `https://placehold.co/600x750/27272a/ffffff?text=${encodeURIComponent(name)}`;
+
+            const sizeCheckboxes = document.querySelectorAll('input[name="prod-sizes"]:checked');
+            const sizes = Array.from(sizeCheckboxes).map(cb => cb.value);
+
+            if (sizes.length === 0) {
+                showToast("Please select at least one size.", true);
+                return;
+            }
+
+            if (editId) {
+                const index = products.findIndex(p => p.id === Number(editId));
+                if (index !== -1) {
+                    products[index] = {
+                        ...products[index],
+                        name, category, tag, price, oldPrice, image: imageUrl, sizes
+                    };
+                    showToast(`Updated "${name}" successfully!`);
+                }
+            } else {
+                const newProd = {
+                    id: Date.now(),
+                    name, category, tag, price, oldPrice, image: imageUrl, sizes
+                };
+                products.unshift(newProd);
+                showToast(`Added "${name}" to live store!`);
+            }
+
+            localStorage.setItem('outfithub_products', JSON.stringify(products));
+            syncSelectedSizes();
+            renderProducts(currentFilter);
+            resetProductForm();
+            refreshAdminDashboard();
+        }
+
+        function editProductInAdmin(id) {
+            const p = products.find(item => item.id === id);
+            if (!p) return;
+
+            document.getElementById('edit-product-id').value = p.id;
+            document.getElementById('prod-name').value = p.name;
+            document.getElementById('prod-category').value = p.category;
+            document.getElementById('prod-tag').value = p.tag || '';
+            document.getElementById('prod-price').value = p.price;
+            document.getElementById('prod-old-price').value = p.oldPrice || '';
+            document.getElementById('prod-image-url').value = p.image;
+
+            document.querySelectorAll('input[name="prod-sizes"]').forEach(cb => {
+                cb.checked = p.sizes.includes(cb.value);
+            });
+
+            document.getElementById('product-form-title').textContent = `Editing: ${p.name}`;
+            document.getElementById('save-product-btn').textContent = "Update Product";
+            document.getElementById('cancel-edit-btn').classList.remove('hidden');
+            document.getElementById('admin-tab-products').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function resetProductForm() {
+            document.getElementById('admin-product-form').reset();
+            document.getElementById('edit-product-id').value = '';
+            document.getElementById('product-form-title').textContent = "Add New Product";
+            document.getElementById('save-product-btn').textContent = "Save & Publish Product";
+            document.getElementById('cancel-edit-btn').classList.add('hidden');
+        }
+
+        function deleteProductInAdmin(id) {
+            products = products.filter(p => p.id !== id);
+            localStorage.setItem('outfithub_products', JSON.stringify(products));
+            renderProducts(currentFilter);
+            refreshAdminDashboard();
+            showToast("Product removed from store.");
+        }
+
+        function resetDefaultProducts() {
+            products = [...DEFAULT_PRODUCTS];
+            localStorage.setItem('outfithub_products', JSON.stringify(products));
+            syncSelectedSizes();
+            renderProducts(currentFilter);
+            refreshAdminDashboard();
+            showToast("Default catalog restored!");
+        }
+
+        function renderAdminProductsList() {
+            const list = document.getElementById('admin-products-list');
+            list.innerHTML = products.map(p => `
+                <div class="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-zinc-50 transition">
+                    <div class="flex items-center gap-4">
+                        <img src="${p.image}" alt="${p.name}" class="w-14 h-16 rounded-xl object-cover border border-zinc-200 shrink-0">
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <h4 class="font-bold text-sm text-zinc-900">${p.name}</h4>
+                                <span class="px-2 py-0.5 rounded-full bg-zinc-200 text-zinc-800 text-[10px] font-bold uppercase">${p.category}</span>
+                            </div>
+                            <p class="text-xs font-extrabold text-amber-600 mt-0.5">Rs. ${Number(p.price).toLocaleString()}</p>
+                            <p class="text-[11px] text-zinc-400 mt-0.5">Sizes: ${p.sizes.join(', ')}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2 self-end sm:self-center">
+                        <button onclick="editProductInAdmin(${p.id})" class="px-3.5 py-2 rounded-xl bg-zinc-100 hover:bg-zinc-900 hover:text-white text-zinc-800 text-xs font-bold transition">
+                            <i class="fa-solid fa-pen-to-square mr-1"></i> Edit
+                        </button>
+                        <button onclick="deleteProductInAdmin(${p.id})" class="px-3.5 py-2 rounded-xl bg-red-50 hover:bg-red-600 hover:text-white text-red-600 text-xs font-bold transition">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Render & Manage Customer Orders
+        function renderAdminOrdersList() {
+            const container = document.getElementById('admin-orders-list');
+            if (orders.length === 0) {
+                container.innerHTML = `
+                    <div class="bg-white p-12 rounded-2xl border border-zinc-200 text-center space-y-2">
+                        <i class="fa-solid fa-box-open text-4xl text-zinc-300"></i>
+                        <h3 class="font-heading font-bold text-base text-zinc-800">No orders yet</h3>
+                        <p class="text-xs text-zinc-500">When customers place an order via WhatsApp checkout, it will show up here.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = orders.map(o => `
+                <div class="bg-white p-5 rounded-2xl border border-zinc-200 shadow-xs space-y-3">
+                    <div class="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-zinc-100">
+                        <div>
+                            <span class="font-heading font-extrabold text-sm text-zinc-900">${o.id}</span>
+                            <span class="text-xs text-zinc-400 ml-2">${o.date}</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <select onchange="updateOrderStatus('${o.id}', this.value)" class="px-3 py-1.5 rounded-full text-xs font-bold border border-zinc-300 bg-zinc-50">
+                                <option value="Pending" ${o.status === 'Pending' ? 'selected' : ''}>🟡 Pending</option>
+                                <option value="Confirmed" ${o.status === 'Confirmed' ? 'selected' : ''}>🔵 Confirmed</option>
+                                <option value="Dispatched" ${o.status === 'Dispatched' ? 'selected' : ''}>🟣 Dispatched</option>
+                                <option value="Delivered" ${o.status === 'Delivered' ? 'selected' : ''}>🟢 Delivered</option>
+                            </select>
+                            <button onclick="deleteOrder('${o.id}')" class="w-8 h-8 rounded-full bg-red-50 hover:bg-red-600 hover:text-white text-red-600 text-xs flex items-center justify-center transition">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                        <div>
+                            <p class="text-zinc-400 uppercase font-bold text-[10px]">Customer Info</p>
+                            <p class="font-bold text-zinc-900 text-sm mt-0.5">${o.customerName} (${o.phone})</p>
+                            <p class="text-zinc-600 mt-0.5">${o.address}, <strong>${o.city}</strong></p>
+                        </div>
+                        <div>
+                            <p class="text-zinc-400 uppercase font-bold text-[10px]">Ordered Items</p>
+                            <p class="text-zinc-800 font-medium mt-0.5">${o.items}</p>
+                            <p class="font-extrabold text-amber-600 text-sm mt-1">Total: Rs. ${Number(o.total).toLocaleString()}</p>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateOrderStatus(orderId, newStatus) {
+            const ord = orders.find(o => o.id === orderId);
+            if (ord) {
+                ord.status = newStatus;
+                localStorage.setItem('outfithub_orders', JSON.stringify(orders));
+                showToast(`Order ${orderId} marked as ${newStatus}`);
+            }
+        }
+
+        function deleteOrder(orderId) {
+            orders = orders.filter(o => o.id !== orderId);
+            localStorage.setItem('outfithub_orders', JSON.stringify(orders));
+            refreshAdminDashboard();
+            showToast("Order deleted.");
+        }
+
+        function clearAllOrders() {
+            orders = [];
+            localStorage.setItem('outfithub_orders', JSON.stringify(orders));
+            refreshAdminDashboard();
+            showToast("All orders cleared.");
+        }
+
+        // Store Settings Form Handlers
+        function populateSettingsForm() {
+            document.getElementById('set-whatsapp').value = storeSettings.whatsappNumber;
+            document.getElementById('set-brand').value = storeSettings.brandName;
+            document.getElementById('set-headline').value = storeSettings.heroHeadline;
+            document.getElementById('set-subtitle').value = storeSettings.heroSubtitle;
+            document.getElementById('set-hero-img').value = storeSettings.heroImage;
+            document.getElementById('set-password').value = storeSettings.adminPassword;
+        }
+
+        function saveStoreSettings(e) {
+            e.preventDefault();
+            storeSettings = {
+                whatsappNumber: document.getElementById('set-whatsapp').value.trim().replace(/[^0-9]/g, ''),
+                brandName: document.getElementById('set-brand').value.trim(),
+                heroHeadline: document.getElementById('set-headline').value.trim(),
+                heroSubtitle: document.getElementById('set-subtitle').value.trim(),
+                heroImage: document.getElementById('set-hero-img').value.trim() || DEFAULT_SETTINGS.heroImage,
+                adminPassword: document.getElementById('set-password').value.trim() || 'admin123'
+            };
+            localStorage.setItem('outfithub_settings', JSON.stringify(storeSettings));
+            applyStoreSettingsToUI();
+            showToast("Store settings saved & updated live!");
+        }
+
+        // ===================================================================
+        // UI HELPERS (Navbar Scroll, Mobile Menu, Custom Toast)
+        // ===================================================================
+        function toggleMobileMenu() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        }
+
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('bg-zinc-950/95', 'backdrop-blur-md', 'shadow-lg', 'py-3.5');
+                navbar.classList.remove('py-5');
+            } else {
+                navbar.classList.remove('bg-zinc-950/95', 'backdrop-blur-md', 'shadow-lg', 'py-3.5');
+                navbar.classList.add('py-5');
+            }
+        });
+
+        let toastTimeout;
+        function showToast(msg, isError = false) {
+            const box = document.getElementById('toast-box');
+            const messageEl = document.getElementById('toast-message');
+            const iconEl = document.getElementById('toast-icon');
+
+            messageEl.textContent = msg;
+            if (isError) {
+                iconEl.className = "fa-solid fa-circle-exclamation text-amber-400 text-lg";
+            } else {
+                iconEl.className = "fa-solid fa-circle-check text-emerald-400 text-lg";
+            }
+
+            box.classList.remove('hidden');
+            box.classList.add('toast-enter');
+
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                box.classList.add('hidden');
+            }, 3200);
+        }
+
+        // Initial Render on Page Load
+        window.addEventListener('DOMContentLoaded', () => {
+            applyStoreSettingsToUI();
+            renderProducts('all');
+            updateCartUI();
+        });
+    </script>
+</body>
+</html>
